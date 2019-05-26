@@ -2,5 +2,5 @@
 
 std::wstring CStringResMgr::Plural(const std::wstring& singular)
 {
-	return singular;
+	return L"wolves";
 }

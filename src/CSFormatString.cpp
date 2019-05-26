@@ -6,14 +6,22 @@
 namespace {
 std::vector<std::wstring> split(const std::wstring& s, wchar_t delimiter)
 {
-	std::vector<std::wstring> tokens;
-	std::wstring token;
-	std::wistringstream tokenStream(s);
-	while (std::getline(tokenStream, token, delimiter))
+	std::vector<std::wstring> result;
+	if (s.empty()) return result;
+
+	size_t pos = 0;
+	while (1)
 	{
-		tokens.push_back(token);
+		auto it = s.find(delimiter, pos);
+		if (it == std::string::npos)
+		{
+			result.push_back(s.substr(pos));
+			return result;
+		}
+		
+		result.push_back(s.substr(pos, it - pos));
+		pos = it + 1;
 	}
-	return tokens;
 }
 }
 

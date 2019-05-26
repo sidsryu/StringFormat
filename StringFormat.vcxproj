@@ -130,11 +130,8 @@
     <ClCompile Include="src\FSFsm.cpp" />
     <ClCompile Include="src\MLocale.cpp" />
     <ClCompile Include="src\tstring-type.cpp" />
+    <ClCompile Include="test\string-format-test.cpp" />
     <ClCompile Include="test\test-main.cpp" />
-    <ClCompile Include="test\TestFormatString.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\catch.hpp" />
