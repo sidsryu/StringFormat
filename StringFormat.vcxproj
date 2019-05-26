@@ -130,9 +130,9 @@
     <ClCompile Include="src\FSFsm.cpp" />
     <ClCompile Include="src\MLocale.cpp" />
     <ClCompile Include="src\tstring-type.cpp" />
+    <ClCompile Include="test\basic-test.cpp" />
     <ClCompile Include="test\english-grammar-test.cpp" />
     <ClCompile Include="test\korean-grammar-test.cpp" />
-    <ClCompile Include="test\string-format-test.cpp" />
     <ClCompile Include="test\test-main.cpp" />
   </ItemGroup>
   <ItemGroup>

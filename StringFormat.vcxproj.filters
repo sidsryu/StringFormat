@@ -36,13 +36,13 @@
     <ClCompile Include="src\MLocale.cpp">
       <Filter>string-format</Filter>
     </ClCompile>
-    <ClCompile Include="test\string-format-test.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
     <ClCompile Include="test\korean-grammar-test.cpp">
       <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="test\english-grammar-test.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\basic-test.cpp">
       <Filter>test</Filter>
     </ClCompile>
   </ItemGroup>
