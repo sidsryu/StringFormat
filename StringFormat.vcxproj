@@ -130,6 +130,7 @@
     <ClCompile Include="test\TestFormatString.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="extern\catch.hpp" />
     <ClInclude Include="src\CSFormatString.h" />
     <ClInclude Include="src\CSFormatStringParameter.h" />
     <ClInclude Include="src\FSContext.h" />

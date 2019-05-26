@@ -7,6 +7,9 @@
     <Filter Include="string-format">
       <UniqueIdentifier>{f0201510-f977-424f-9d8d-69286421bc3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="extern">
+      <UniqueIdentifier>{3285d4f9-4ae7-4050-b272-448f20e97ab2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CSFormatString.cpp">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="src\FSFsm.h">
       <Filter>string-format</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\catch.hpp">
+      <Filter>extern</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
