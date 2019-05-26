@@ -29,16 +29,16 @@ CStringResMgr* CSFormatString::sm_pDictionary = NULL;
 
 std::tstring CSFormatString::Format(std::tstring formater, FSParam param)
 {
-	// À¯´ÏÄÚµå·Î Ã³¸®ÇÑ´Ù. TCHAR´Â Å¬¶óÀÌ¾ğÆ® Åø ºôµå¸¦ À§ÇØ ÀÎÅÍÆäÀÌ½º¿¡¸¸ »ç¿ëÇÑ´Ù.
+	// ìœ ë‹ˆì½”ë“œë¡œ ì²˜ë¦¬í•œë‹¤. TCHARëŠ” í´ë¼ì´ì–¸íŠ¸ íˆ´ ë¹Œë“œë¥¼ ìœ„í•´ ì¸í„°í˜ì´ìŠ¤ì—ë§Œ ì‚¬ìš©í•œë‹¤.
 	std::wstring strFormater = MLocale::ConvTCHARToUTF16(formater.c_str());
 	std::wstring strParam = MLocale::ConvTCHARToUTF16(param.m_strParam.c_str());
 	std::wstring strSeparator = MLocale::ConvTCHARToUTF16(FSP_SEPARATOR);
 
 	
-	// ¿ÜºÎ ÀÎÀÚ ÃßÃâ	
+	// ì™¸ë¶€ ì¸ì ì¶”ì¶œ	
 	std::vector<std::wstring> vecParam = split(strParam, strSeparator.front());
 
-	// ÆÄ½Ì
+	// íŒŒì‹±
 	FSContext context(vecParam, sm_pDictionary);
 
 	for (wchar_t token : formater)
@@ -49,7 +49,7 @@ std::tstring CSFormatString::Format(std::tstring formater, FSParam param)
 	std::wstring strResult = context.GetResult();
 
 
-	// À¯´ÏÄÚµå °á°ú tstringÀ¸·Î º¯È¯
+	// ìœ ë‹ˆì½”ë“œ ê²°ê³¼ tstringìœ¼ë¡œ ë³€í™˜
 	return MLocale::ConvUTF16ToTCHAR(strResult.c_str());
 }
 

@@ -8,7 +8,7 @@ class CStringResMgr;
 class CSFormatString
 {
 public:
-	// formater´Â %s³ª %d ´ë½Å {0}, {1} µî ÀÎÀÚ ¼ø¼­·Î ÀÔ·ÂÇÕ´Ï´Ù.
+	// formaterëŠ” %së‚˜ %d ëŒ€ì‹  {0}, {1} ë“± ì¸ì ìˆœì„œë¡œ ì…ë ¥í•©ë‹ˆë‹¤.
 	static std::tstring Format(std::tstring formater, FSParam param = FSParam());
 	
 	static void SetDictionary(CStringResMgr* pDictionary);

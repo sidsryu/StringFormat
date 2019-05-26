@@ -5,41 +5,41 @@ TEST_CASE("Decorate parameters by Korean grammar", "[korean][grammar]")
 {
 	SECTION("Casting subject particles")
 	{
-		auto format = L"{0,ÀÌ} {0,°¡} {1,ÀÌ} {1,°¡}";
-		auto result = CSFormatString::Format(format, { L"Àü»ç", L"µµÀû" });
+		auto format = L"{0,ì´} {0,ê°€} {1,ì´} {1,ê°€}";
+		auto result = CSFormatString::Format(format, { L"ì „ì‚¬", L"ë„ì " });
 
-		CHECK(result == L"Àü»ç°¡ Àü»ç°¡ µµÀûÀÌ µµÀûÀÌ");
+		CHECK(result == L"ì „ì‚¬ê°€ ì „ì‚¬ê°€ ë„ì ì´ ë„ì ì´");
 	}
 
 	SECTION("Casting topic particles")
 	{
-		auto format = L"{0,Àº} {0,´Â} {1,Àº} {1,´Â}";
-		auto result = CSFormatString::Format(format, { L"Àü»ç", L"µµÀû" });
+		auto format = L"{0,ì€} {0,ëŠ”} {1,ì€} {1,ëŠ”}";
+		auto result = CSFormatString::Format(format, { L"ì „ì‚¬", L"ë„ì " });
 
-		CHECK(result == L"Àü»ç´Â Àü»ç´Â µµÀûÀº µµÀûÀº");
+		CHECK(result == L"ì „ì‚¬ëŠ” ì „ì‚¬ëŠ” ë„ì ì€ ë„ì ì€");
 	}
 
 	SECTION("Casting object particles")
 	{
-		auto format = L"{0,À»} {0,¸¦} {1,À»} {1,¸¦}";
-		auto result = CSFormatString::Format(format, { L"Àü»ç", L"µµÀû" });
+		auto format = L"{0,ì„} {0,ë¥¼} {1,ì„} {1,ë¥¼}";
+		auto result = CSFormatString::Format(format, { L"ì „ì‚¬", L"ë„ì " });
 
-		CHECK(result == L"Àü»ç¸¦ Àü»ç¸¦ µµÀûÀ» µµÀûÀ»");
+		CHECK(result == L"ì „ì‚¬ë¥¼ ì „ì‚¬ë¥¼ ë„ì ì„ ë„ì ì„");
 	}
 
 	SECTION("Casting decorated parameters with particles")
 	{
-		auto format = L"´ç½ÅÀº {0,¸¦:<<$>>} ¸Ô½À´Ï´Ù.";
-		auto result = CSFormatString::Format(format, { L"»ç°ú" });
+		auto format = L"ë‹¹ì‹ ì€ {0,ë¥¼:<<$>>} ë¨¹ìŠµë‹ˆë‹¤.";
+		auto result = CSFormatString::Format(format, { L"ì‚¬ê³¼" });
 
-		CHECK(result == L"´ç½ÅÀº <<»ç°ú>>¸¦ ¸Ô½À´Ï´Ù.");
+		CHECK(result == L"ë‹¹ì‹ ì€ <<ì‚¬ê³¼>>ë¥¼ ë¨¹ìŠµë‹ˆë‹¤.");
 	}
 
 	SECTION("Recursive decorated parameters with particles in Korean grammer")
 	{
-		auto format = L"{0:{1,Àº} $ {1,À»}}";
-		auto result = CSFormatString::Format(format, { L"»ç°ú", L"¿À·»Áö" });
+		auto format = L"{0:{1,ì€} $ {1,ì„}}";
+		auto result = CSFormatString::Format(format, { L"ì‚¬ê³¼", L"ì˜¤ë Œì§€" });
 
-		CHECK(result == L"¿À·»Áö´Â »ç°ú ¿À·»Áö¸¦");
+		CHECK(result == L"ì˜¤ë Œì§€ëŠ” ì‚¬ê³¼ ì˜¤ë Œì§€ë¥¼");
 	}
 }

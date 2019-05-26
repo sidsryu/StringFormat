@@ -93,26 +93,26 @@ void FSContext::CastingState(wchar_t token)
 {
 	switch(token)
 	{
-	case L'À»':
-	case L'¸¦':
-		if (HasJonsung())	m_strPostfix.push_back(L'À»');
-		else m_strPostfix.push_back(L'¸¦');
+	case L'ì„':
+	case L'ë¥¼':
+		if (HasJonsung())	m_strPostfix.push_back(L'ì„');
+		else m_strPostfix.push_back(L'ë¥¼');
 
 		m_strBracket.push_back(token);
 		Trans(&FSContext::CastEndState);
 		break;
-	case L'ÀÌ':
-	case L'°¡':
-		if (HasJonsung())	m_strPostfix.push_back(L'ÀÌ');
-		else m_strPostfix.push_back(L'°¡');
+	case L'ì´':
+	case L'ê°€':
+		if (HasJonsung())	m_strPostfix.push_back(L'ì´');
+		else m_strPostfix.push_back(L'ê°€');
 
 		m_strBracket.push_back(token);
 		Trans(&FSContext::CastEndState);
 		break;
-	case L'Àº':
-	case L'´Â':
-		if (HasJonsung())	m_strPostfix.push_back(L'Àº');
-		else m_strPostfix.push_back(L'´Â');
+	case L'ì€':
+	case L'ëŠ”':
+		if (HasJonsung())	m_strPostfix.push_back(L'ì€');
+		else m_strPostfix.push_back(L'ëŠ”');
 
 		m_strBracket.push_back(token);
 		Trans(&FSContext::CastEndState);
@@ -266,7 +266,7 @@ bool FSContext::HasJonsung(void) const
 
 	wchar_t lastLetter = *m_strCasting.rbegin();
 
-	// À¯´ÏÄÚµå ÇÑ±ÛÆäÀÌÁö
+	// ìœ ë‹ˆì½”ë“œ í•œê¸€í˜ì´ì§€
 	if (44032 <= lastLetter && lastLetter <= 55203)
 	{
 		return 0 != (lastLetter - 44032) % 28;
