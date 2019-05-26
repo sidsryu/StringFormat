@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="test">
+      <UniqueIdentifier>{04efe3ae-1b81-4aac-bda6-140478b235c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="string-format">
+      <UniqueIdentifier>{f0201510-f977-424f-9d8d-69286421bc3e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\CSFormatString.cpp">
+      <Filter>string-format</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSFormatStringParameter.cpp">
+      <Filter>string-format</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FSContext.cpp">
+      <Filter>string-format</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FSFsm.cpp">
+      <Filter>string-format</Filter>
+    </ClCompile>
+    <ClCompile Include="test\TestFormatString.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\CSFormatString.h">
+      <Filter>string-format</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CSFormatStringParameter.h">
+      <Filter>string-format</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FSContext.h">
+      <Filter>string-format</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FSFsm.h">
+      <Filter>string-format</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
