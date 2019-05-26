@@ -1,8 +1,7 @@
-#include "stdafx.h"
 #include "FSContext.h"
 #include "CStringResMgr.h"
 
-FSContext::FSContext(const vector<wstring>& param, CStringResMgr* pDictionary)
+FSContext::FSContext(const std::vector<std::wstring>& param, CStringResMgr* pDictionary)
 : m_vecParam(param)
 , m_pDictionary(pDictionary)
 {
@@ -14,7 +13,7 @@ FSContext::~FSContext()
 	// do nothing
 }
 
-wstring FSContext::GetResult(void) const
+std::wstring FSContext::GetResult(void) const
 {
 	return m_strResult + m_strBracket;	
 }
@@ -215,7 +214,7 @@ void FSContext::NestedBracketState(wchar_t token)
 		{
 			FSContext context(m_vecParam, m_pDictionary);
 
-			for each(wchar_t nestedToken in m_strNestedBracket)
+			for (wchar_t nestedToken : m_strNestedBracket)
 			{
 				context.Dispatch(nestedToken);
 			}
@@ -274,7 +273,7 @@ bool FSContext::HasJonsung(void) const
 	}
 	else
 	{
-		wstring letter(1, lastLetter);		
+		std::wstring letter(1, lastLetter);		
 		switch(_wtoi(letter.c_str()) % 10)
 		{
 		case 0:

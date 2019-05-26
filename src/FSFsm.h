@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cassert>
+
 template <typename Derive>
 class FSFsm
 {
@@ -7,7 +9,7 @@ public:
 	typedef void (Derive::*FSState)(wchar_t token);
 
 public:
-	FSFsm(): m_state(NULL)
+	FSFsm(): m_state(nullptr)
 	{
 		// do nothing
 	}
@@ -19,7 +21,7 @@ public:
 
 	void Dispatch(wchar_t token)
 	{
-		_ASSERT(m_state != NULL);
+		assert(m_state != nullptr);
 		(((Derive*)this)->*m_state)(token);
 	}
 

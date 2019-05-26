@@ -125,16 +125,26 @@
   <ItemGroup>
     <ClCompile Include="src\CSFormatString.cpp" />
     <ClCompile Include="src\CSFormatStringParameter.cpp" />
+    <ClCompile Include="src\CStringResMgr.cpp" />
     <ClCompile Include="src\FSContext.cpp" />
     <ClCompile Include="src\FSFsm.cpp" />
-    <ClCompile Include="test\TestFormatString.cpp" />
+    <ClCompile Include="src\MLocale.cpp" />
+    <ClCompile Include="src\tstring-type.cpp" />
+    <ClCompile Include="test\test-main.cpp" />
+    <ClCompile Include="test\TestFormatString.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\catch.hpp" />
     <ClInclude Include="src\CSFormatString.h" />
     <ClInclude Include="src\CSFormatStringParameter.h" />
+    <ClInclude Include="src\CStringResMgr.h" />
     <ClInclude Include="src\FSContext.h" />
     <ClInclude Include="src\FSFsm.h" />
+    <ClInclude Include="src\MLocale.h" />
+    <ClInclude Include="src\tstring-type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

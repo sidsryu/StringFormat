@@ -1,6 +1,5 @@
-#include "stdafx.h"
-#include "CSFormatString.h"
-#include "CStringResMgr.h"
+#include "../src/CSFormatString.h"
+#include "../src/CStringResMgr.h"
 
 SUITE(FormatString)
 {

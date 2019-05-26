@@ -24,6 +24,18 @@
     <ClCompile Include="src\FSFsm.cpp">
       <Filter>string-format</Filter>
     </ClCompile>
+    <ClCompile Include="test\test-main.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tstring-type.cpp">
+      <Filter>string-format</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CStringResMgr.cpp">
+      <Filter>string-format</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MLocale.cpp">
+      <Filter>string-format</Filter>
+    </ClCompile>
     <ClCompile Include="test\TestFormatString.cpp">
       <Filter>test</Filter>
     </ClCompile>
@@ -43,6 +55,15 @@
     </ClInclude>
     <ClInclude Include="extern\catch.hpp">
       <Filter>extern</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tstring-type.h">
+      <Filter>string-format</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CStringResMgr.h">
+      <Filter>string-format</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MLocale.h">
+      <Filter>string-format</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
