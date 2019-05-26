@@ -5,5 +5,5 @@
 class CStringResMgr
 {
 public:
-	std::wstring Plural(const std::wstring& singular);
+	virtual std::wstring Plural(const std::wstring& singular);
 };
