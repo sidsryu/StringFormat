@@ -39,7 +39,7 @@
     <ClCompile Include="src\FSContext.cpp">
       <Filter>parser</Filter>
     </ClCompile>
-    <ClCompile Include="src\FSFsm.cpp">
+    <ClCompile Include="src\state-method-fsm.cpp">
       <Filter>parser</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,7 +59,7 @@
     <ClInclude Include="src\FSContext.h">
       <Filter>parser</Filter>
     </ClInclude>
-    <ClInclude Include="src\FSFsm.h">
+    <ClInclude Include="src\state-method-fsm.h">
       <Filter>parser</Filter>
     </ClInclude>
   </ItemGroup>
