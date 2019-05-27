@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\arguments.cpp" />
+    <ClCompile Include="src\context.cpp" />
     <ClCompile Include="src\dictionary.cpp" />
     <ClCompile Include="src\evaluator.cpp" />
     <ClCompile Include="src\state-method-fsm.cpp" />
@@ -140,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="extern\catch.hpp" />
     <ClInclude Include="src\arguments.h" />
+    <ClInclude Include="src\context.h" />
     <ClInclude Include="src\dictionary.h" />
     <ClInclude Include="src\evaluator.h" />
     <ClInclude Include="src\state-method-fsm.h" />

@@ -15,7 +15,7 @@ namespace string_format {
 	namespace detail {
 		std::wstring Format(const std::wstring& formater, const Arguments& args)
 		{
-			Evaluator context(args, g_dictionary);
+			evaluator::Evaluator context(args, g_dictionary);
 			return context.Evaluate(formater);
 		}
 	}

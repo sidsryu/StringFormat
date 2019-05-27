@@ -3,12 +3,11 @@
 #include "dictionary.h"
 
 namespace string_format {
+namespace evaluator {
 	Evaluator::Evaluator(const Arguments& args,
 		const std::shared_ptr<Dictionary>& dict)
 		: m_args(args)
 		, m_dict(dict)
-		, m_enumIndex(0)
-		, m_restEnumerationDepth(0)
 	{
 		// initial state
 		Trans(&Evaluator::OnPlainText);
@@ -21,7 +20,7 @@ namespace string_format {
 			Dispatch(token);
 		}
 
-		return m_result + m_rootBracket;
+		return m_ctx.result + m_ctx.rootBracket;
 	}
 
 	void Evaluator::OnPlainText(wchar_t token)
@@ -29,11 +28,11 @@ namespace string_format {
 		switch (token)
 		{
 		case L'{':
-			m_rootBracket = { token };
+			m_ctx.rootBracket = { token };
 			Trans(&Evaluator::OnInRootBracket);
 			break;
 		default:
-			m_result.push_back(token);
+			m_ctx.result.push_back(token);
 			break;
 		}
 	}
@@ -56,20 +55,20 @@ namespace string_format {
 				int index = token - L'0';
 				if (index < m_args.GetSize())
 				{
-					m_captured = m_args.GetString(index);
+					m_ctx.captured = m_args.GetString(index);
 				}
 				else
 				{
-					m_captured += token;
+					m_ctx.captured += token;
 				}
 
-				m_rootBracket += token;
+				m_ctx.rootBracket += token;
 				Trans(&Evaluator::OnArgumentCaptured);
 			}
 			break;
 		default:
-			m_result += m_rootBracket + token;
-			m_rootBracket = {};
+			m_ctx.result += m_ctx.rootBracket + token;
+			m_ctx.rootBracket = {};
 			Trans(&Evaluator::OnPlainText);
 			break;
 		}
@@ -80,23 +79,23 @@ namespace string_format {
 		switch (token)
 		{
 		case L'}':
-			m_result += m_captured + m_affix;
-			m_affix = {};
-			m_captured = {};
-			m_rootBracket = {};
+			m_ctx.result += m_ctx.captured + m_ctx.affix;
+			m_ctx.affix = {};
+			m_ctx.captured = {};
+			m_ctx.rootBracket = {};
 			Trans(&Evaluator::OnPlainText);
 			break;
 		case L',':
-			m_rootBracket += token;
+			m_ctx.rootBracket += token;
 			Trans(&Evaluator::OnProcessGrammar);
 			break;
 		case L':':
-			m_rootBracket += token;
+			m_ctx.rootBracket += token;
 			Trans(&Evaluator::OnDecorate);
 			break;
 		default:
-			m_result += m_rootBracket + token;
-			m_rootBracket = {};
+			m_ctx.result += m_ctx.rootBracket + token;
+			m_ctx.rootBracket = {};
 			Trans(&Evaluator::OnPlainText);
 			break;
 		}
@@ -107,8 +106,8 @@ namespace string_format {
 		if (ProcessKorean(token)) return;
 		if (ProcessEnglish(token)) return;
 
-		m_result += m_rootBracket + token;
-		m_rootBracket = {};
+		m_ctx.result += m_ctx.rootBracket + token;
+		m_ctx.rootBracket = {};
 		Trans(&Evaluator::OnPlainText);
 	}
 
@@ -118,21 +117,21 @@ namespace string_format {
 		{
 		case L'을':
 		case L'를':
-			m_affix = EndsInConsonant(m_captured) ? L'을' : L'를';
+			m_ctx.affix = EndsInConsonant(m_ctx.captured) ? L'을' : L'를';
 			break;
 		case L'이':
 		case L'가':
-			m_affix = EndsInConsonant(m_captured) ? L'이' : L'가';
+			m_ctx.affix = EndsInConsonant(m_ctx.captured) ? L'이' : L'가';
 			break;
 		case L'은':
 		case L'는':
-			m_affix = EndsInConsonant(m_captured) ? L'은' : L'는';
+			m_ctx.affix = EndsInConsonant(m_ctx.captured) ? L'은' : L'는';
 			break;
 		default:
 			return false;
 		}
 
-		m_rootBracket += token;
+		m_ctx.rootBracket += token;
 		Trans(&Evaluator::OnGrammarProcessed);
 		return true;
 	}
@@ -179,13 +178,13 @@ namespace string_format {
 		{
 		case L's':
 		case L'S':
-			if (m_dict != nullptr) m_captured = m_dict->Plural(m_captured);
+			if (m_dict != nullptr) m_ctx.captured = m_dict->Plural(m_ctx.captured);
 			break;
 		default:
 			return false;
 		}
 
-		m_rootBracket += token;
+		m_ctx.rootBracket += token;
 		Trans(&Evaluator::OnGrammarProcessed);
 		return true;
 	}
@@ -195,19 +194,19 @@ namespace string_format {
 		switch (token)
 		{
 		case L'}':
-			m_result += m_captured + m_affix;
-			m_affix = {};
-			m_captured = {};
-			m_rootBracket = {};
+			m_ctx.result += m_ctx.captured + m_ctx.affix;
+			m_ctx.affix = {};
+			m_ctx.captured = {};
+			m_ctx.rootBracket = {};
 			Trans(&Evaluator::OnPlainText);
 			break;
 		case L':':
-			m_rootBracket += token;
+			m_ctx.rootBracket += token;
 			Trans(&Evaluator::OnDecorate);
 			break;
 		default:
-			m_result += m_rootBracket + token;
-			m_rootBracket = {};
+			m_ctx.result += m_ctx.rootBracket + token;
+			m_ctx.rootBracket = {};
 			Trans(&Evaluator::OnPlainText);
 			break;
 		}
@@ -218,38 +217,38 @@ namespace string_format {
 		switch (token)
 		{
 		case L'}':
-			m_result += m_decorated + m_affix;
-			m_affix = {};
-			m_captured = {};
-			m_rootBracket = {};
+			m_ctx.result += m_ctx.decorated + m_ctx.affix;
+			m_ctx.affix = {};
+			m_ctx.captured = {};
+			m_ctx.rootBracket = {};
 			Trans(&Evaluator::OnPlainText);
 			break;
 		case L'{':
-			m_subBracket = token;
-			m_rootBracket += token;
+			m_ctx.subBracket = token;
+			m_ctx.rootBracket += token;
 			Trans(&Evaluator::OnInSubBracket);
 			break;
 		case L';':
-			if (m_enumIndex == std::stoi(m_captured))
+			if (m_ctx.enumIndex == std::stoi(m_ctx.captured))
 			{
-				m_restEnumerationDepth = 1;
+				m_ctx.restEnumerationDepth = 1;
 				Trans(&Evaluator::OnIgnoreRestEnumeration);
 			}
 			else
 			{
-				m_enumIndex++;
-				m_decorated = {};
+				m_ctx.enumIndex++;
+				m_ctx.decorated = {};
 			}
 
-			m_rootBracket.push_back(token);
+			m_ctx.rootBracket.push_back(token);
 			break;
 		case L'$':
-			m_decorated += m_captured;
-			m_rootBracket += token;
+			m_ctx.decorated += m_ctx.captured;
+			m_ctx.rootBracket += token;
 			break;
 		default:
-			m_decorated += token;
-			m_rootBracket += token;
+			m_ctx.decorated += token;
+			m_ctx.rootBracket += token;
 			break;
 		}
 	}
@@ -260,18 +259,18 @@ namespace string_format {
 		{
 		case L'}':
 			{
-				m_subBracket.push_back(token);
+				m_ctx.subBracket.push_back(token);
 
 				Evaluator evaluator(m_args, m_dict);
-				m_decorated += evaluator.Evaluate(m_subBracket);
+				m_ctx.decorated += evaluator.Evaluate(m_ctx.subBracket);
 
-				m_rootBracket.push_back(token);
+				m_ctx.rootBracket.push_back(token);
 				Trans(&Evaluator::OnDecorate);
 			}
 			break;
 		default:
-			m_subBracket.push_back(token);
-			m_rootBracket.push_back(token);
+			m_ctx.subBracket.push_back(token);
+			m_ctx.rootBracket.push_back(token);
 			break;
 		}
 	}
@@ -281,25 +280,26 @@ namespace string_format {
 		switch (token)
 		{
 		case L'{':
-			m_restEnumerationDepth++;
-			m_rootBracket += token;
+			m_ctx.restEnumerationDepth++;
+			m_ctx.rootBracket += token;
 			break;
 		case L'}':
-			m_restEnumerationDepth--;
-			m_rootBracket += token;
+			m_ctx.restEnumerationDepth--;
+			m_ctx.rootBracket += token;
 
-			if (m_restEnumerationDepth == 0)
+			if (m_ctx.restEnumerationDepth == 0)
 			{
-				m_result += m_decorated + m_affix;
-				m_affix = {};
-				m_captured = {};
-				m_rootBracket = {};
+				m_ctx.result += m_ctx.decorated + m_ctx.affix;
+				m_ctx.affix = {};
+				m_ctx.captured = {};
+				m_ctx.rootBracket = {};
 				Trans(&Evaluator::OnPlainText);
 			}
 			break;
 		default:
-			m_rootBracket += token;
+			m_ctx.rootBracket += token;
 			break;
 		}
 	}
+}
 }

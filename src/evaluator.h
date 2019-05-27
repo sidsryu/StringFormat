@@ -1,6 +1,7 @@
 #pragma once
 
 #include "state-method-fsm.h"
+#include "context.h"
 #include <vector>
 #include <string>
 #include <memory>
@@ -9,6 +10,7 @@ namespace string_format {
 	class Arguments;
 	class Dictionary;
 
+namespace evaluator {
 	class Evaluator : public StateMethodFsm<Evaluator>
 	{
 	public:
@@ -34,14 +36,7 @@ namespace string_format {
 	private:
 		const Arguments& m_args;
 		const std::shared_ptr<Dictionary>& m_dict;
-
-		std::wstring m_result;
-		std::wstring m_rootBracket;
-		std::wstring m_captured;
-		std::wstring m_affix;
-		std::wstring m_subBracket;
-		std::wstring m_decorated;
-		int	m_enumIndex;
-		int m_restEnumerationDepth;
+		Context m_ctx;
 	};
+}
 }
