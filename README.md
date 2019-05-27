@@ -7,7 +7,7 @@ String formater for string tables to localize
 VS2019 project. Copy all source files in `/src `.
 
 
-## Nomarl Usage
+## Normal Usage
 
 ```
 namespace sf = string_format;
