@@ -2,23 +2,20 @@
 
 #include "CSFormatStringParameter.h"
 #include <string>
+#include <memory>
 
 class CStringResMgr;
 
-class CSFormatString
-{
-public:
+namespace CSFormatString {
 	template<typename... Args>
-	static std::wstring Format(std::wstring formater, Args... args)
+	static std::wstring Format(const std::wstring& formater, Args... args)
 	{
-		return Format(formater, FSParam{ args... });
+		return detail::Format(formater, FSParam{ args... });
 	}
 
-	static void SetDictionary(CStringResMgr* pDictionary);
+	CStringResMgr* SetDictionary(CStringResMgr* dictionary);
 
-private:
-	static std::wstring Format(std::wstring formater, const FSParam& params);	
-
-private:
-	static CStringResMgr* sm_pDictionary;
-};
+	namespace detail {
+		std::wstring Format(const std::wstring& formater, const FSParam& params);
+	}
+}

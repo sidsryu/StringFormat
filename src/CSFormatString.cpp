@@ -1,21 +1,27 @@
 #include "CSFormatString.h"
 #include "FSContext.h"
 
-CStringResMgr* CSFormatString::sm_pDictionary = NULL;
-
-std::wstring CSFormatString::Format(std::wstring formater, const FSParam& params)
-{
-	FSContext context(params.GetParams(), sm_pDictionary);
-
-	for (wchar_t token : formater)
-	{
-		context.Dispatch(token);
+namespace CSFormatString {
+	namespace {
+		CStringResMgr* g_dictionary = nullptr;
 	}
 
-	return context.GetResult();
-}
+	CStringResMgr* SetDictionary(CStringResMgr* dictionary)
+	{
+		std::swap(g_dictionary, dictionary);
+		return dictionary;
+	}
 
-void CSFormatString::SetDictionary(CStringResMgr* pDictionary)
-{
-	sm_pDictionary = pDictionary;
+	namespace detail {
+		std::wstring Format(const std::wstring& formater, const FSParam& params)
+		{
+			FSContext context(params.GetParams(), g_dictionary);
+			for (wchar_t token : formater)
+			{
+				context.Dispatch(token);
+			}
+
+			return context.GetResult();
+		}
+	}
 }
