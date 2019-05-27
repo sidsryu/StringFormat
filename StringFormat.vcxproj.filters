@@ -36,10 +36,10 @@
     <ClCompile Include="src\arguments.cpp">
       <Filter>string-format</Filter>
     </ClCompile>
-    <ClCompile Include="src\FSContext.cpp">
+    <ClCompile Include="src\state-method-fsm.cpp">
       <Filter>analyzer</Filter>
     </ClCompile>
-    <ClCompile Include="src\state-method-fsm.cpp">
+    <ClCompile Include="src\evaluator.cpp">
       <Filter>analyzer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,10 +56,10 @@
     <ClInclude Include="src\string-format.h">
       <Filter>string-format</Filter>
     </ClInclude>
-    <ClInclude Include="src\FSContext.h">
+    <ClInclude Include="src\state-method-fsm.h">
       <Filter>analyzer</Filter>
     </ClInclude>
-    <ClInclude Include="src\state-method-fsm.h">
+    <ClInclude Include="src\evaluator.h">
       <Filter>analyzer</Filter>
     </ClInclude>
   </ItemGroup>
