@@ -11,7 +11,7 @@ namespace string_format {
 		, m_nEscapeBracketDepth(0)
 	{
 		// initial state
-		Trans(&Evaluator::NormalTextState);
+		Trans(&Evaluator::OnPlainText);
 	}
 
 	std::wstring Evaluator::Evaluate(std::wstring formater)
@@ -24,13 +24,13 @@ namespace string_format {
 		return m_strResult + m_strBracket;
 	}
 
-	void Evaluator::NormalTextState(wchar_t token)
+	void Evaluator::OnPlainText(wchar_t token)
 	{
 		if (token == L'{')
 		{
 			m_strBracket.clear();
 			m_strBracket.push_back(token);
-			Trans(&Evaluator::OpeningBracketState);
+			Trans(&Evaluator::OnOpenBracket);
 		}
 		else
 		{
@@ -38,7 +38,7 @@ namespace string_format {
 		}
 	}
 
-	void Evaluator::OpeningBracketState(wchar_t token)
+	void Evaluator::OnOpenBracket(wchar_t token)
 	{
 		size_t nIndex = token - L'0';
 
@@ -54,18 +54,18 @@ namespace string_format {
 			}
 
 			m_strBracket.push_back(token);
-			Trans(&Evaluator::IndexState);
+			Trans(&Evaluator::OnIndexed);
 		}
 		else
 		{
 			m_strBracket.push_back(token);
 			m_strResult += m_strBracket;
 			m_strBracket.clear();
-			Trans(&Evaluator::NormalTextState);
+			Trans(&Evaluator::OnPlainText);
 		}
 	}
 
-	void Evaluator::IndexState(wchar_t token)
+	void Evaluator::OnIndexed(wchar_t token)
 	{
 		switch (token)
 		{
@@ -74,28 +74,28 @@ namespace string_format {
 			m_strCasting.clear();
 			m_strPostfix.clear();
 			m_strBracket.clear();
-			Trans(&Evaluator::NormalTextState);
+			Trans(&Evaluator::OnPlainText);
 			break;
 		case L',':
 			m_strBracket.push_back(token);
-			Trans(&Evaluator::CastingState);
+			Trans(&Evaluator::OnGrammar);
 			break;
 		case L':':
 			m_strBracket.push_back(token);
 			m_strFormat.clear();
 			m_nFormatGroup = 0;
-			Trans(&Evaluator::FormatState);
+			Trans(&Evaluator::OnDecorating);
 			break;
 		default:
 			m_strBracket.push_back(token);
 			m_strResult += m_strBracket;
 			m_strBracket.clear();
-			Trans(&Evaluator::NormalTextState);
+			Trans(&Evaluator::OnPlainText);
 			break;
 		}
 	}
 
-	void Evaluator::CastingState(wchar_t token)
+	void Evaluator::OnGrammar(wchar_t token)
 	{
 		switch (token)
 		{
@@ -105,7 +105,7 @@ namespace string_format {
 			else m_strPostfix.push_back(L'를');
 
 			m_strBracket.push_back(token);
-			Trans(&Evaluator::CastEndState);
+			Trans(&Evaluator::OnGrammarFinished);
 			break;
 		case L'이':
 		case L'가':
@@ -113,7 +113,7 @@ namespace string_format {
 			else m_strPostfix.push_back(L'가');
 
 			m_strBracket.push_back(token);
-			Trans(&Evaluator::CastEndState);
+			Trans(&Evaluator::OnGrammarFinished);
 			break;
 		case L'은':
 		case L'는':
@@ -121,7 +121,7 @@ namespace string_format {
 			else m_strPostfix.push_back(L'는');
 
 			m_strBracket.push_back(token);
-			Trans(&Evaluator::CastEndState);
+			Trans(&Evaluator::OnGrammarFinished);
 			break;
 		case L's':
 		case L'S':
@@ -131,18 +131,18 @@ namespace string_format {
 			}
 
 			m_strBracket.push_back(token);
-			Trans(&Evaluator::CastEndState);
+			Trans(&Evaluator::OnGrammarFinished);
 			break;
 		default:
 			m_strBracket.push_back(token);
 			m_strResult += m_strBracket;
 			m_strBracket.clear();
-			Trans(&Evaluator::NormalTextState);
+			Trans(&Evaluator::OnPlainText);
 			break;
 		}
 	}
 
-	void Evaluator::CastEndState(wchar_t token)
+	void Evaluator::OnGrammarFinished(wchar_t token)
 	{
 		switch (token)
 		{
@@ -151,24 +151,24 @@ namespace string_format {
 			m_strCasting.clear();
 			m_strPostfix.clear();
 			m_strBracket.clear();
-			Trans(&Evaluator::NormalTextState);
+			Trans(&Evaluator::OnPlainText);
 			break;
 		case L':':
 			m_strBracket.push_back(token);
 			m_strFormat.clear();
 			m_nFormatGroup = 0;
-			Trans(&Evaluator::FormatState);
+			Trans(&Evaluator::OnDecorating);
 			break;
 		default:
 			m_strBracket.push_back(token);
 			m_strResult += m_strBracket;
 			m_strBracket.clear();
-			Trans(&Evaluator::NormalTextState);
+			Trans(&Evaluator::OnPlainText);
 			break;
 		}
 	}
 
-	void Evaluator::FormatState(wchar_t token)
+	void Evaluator::OnDecorating(wchar_t token)
 	{
 		switch (token)
 		{
@@ -177,13 +177,13 @@ namespace string_format {
 			m_strPostfix.clear();
 			m_strCasting.clear();
 			m_strBracket.clear();
-			Trans(&Evaluator::NormalTextState);
+			Trans(&Evaluator::OnPlainText);
 			break;
 		case L'{':
 			m_strBracket.push_back(token);
 			m_strNestedBracket.clear();
 			m_strNestedBracket.push_back(token);
-			Trans(&Evaluator::NestedBracketState);
+			Trans(&Evaluator::OnNestedBracket);
 			break;
 		case L'$':
 			m_strBracket.push_back(token);
@@ -193,7 +193,7 @@ namespace string_format {
 			if (m_nFormatGroup == _wtoi(m_strCasting.c_str()))
 			{
 				m_nEscapeBracketDepth = 1;
-				Trans(&Evaluator::EscapeBracketState);
+				Trans(&Evaluator::OnCloseBracket);
 			}
 			else
 			{
@@ -210,7 +210,7 @@ namespace string_format {
 		}
 	}
 
-	void Evaluator::NestedBracketState(wchar_t token)
+	void Evaluator::OnNestedBracket(wchar_t token)
 	{
 		switch (token)
 		{
@@ -222,7 +222,7 @@ namespace string_format {
 				m_strFormat += evaluator.Evaluate(m_strNestedBracket);
 
 				m_strBracket.push_back(token);
-				Trans(&Evaluator::FormatState);
+				Trans(&Evaluator::OnDecorating);
 			}
 			break;
 		default:
@@ -232,7 +232,7 @@ namespace string_format {
 		}
 	}
 
-	void Evaluator::EscapeBracketState(wchar_t token)
+	void Evaluator::OnCloseBracket(wchar_t token)
 	{
 		switch (token)
 		{
@@ -250,7 +250,7 @@ namespace string_format {
 				m_strCasting.clear();
 				m_strPostfix.clear();
 				m_strBracket.clear();
-				Trans(&Evaluator::NormalTextState);
+				Trans(&Evaluator::OnPlainText);
 			}
 			break;
 		default:

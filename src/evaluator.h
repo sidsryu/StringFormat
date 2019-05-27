@@ -18,17 +18,16 @@ namespace string_format {
 		std::wstring Evaluate(std::wstring formater);
 
 	private:
-		void NormalTextState(wchar_t token);
-		void OpeningBracketState(wchar_t token);
-		void IndexState(wchar_t token);
-		void CastingState(wchar_t token);
-		void CastEndState(wchar_t token);
-		void FormatState(wchar_t token);
-		void NestedBracketState(wchar_t token);
-		void EscapeBracketState(wchar_t token);
+		void OnPlainText(wchar_t token);
+		void OnOpenBracket(wchar_t token);
+		void OnIndexed(wchar_t token);
+		void OnGrammar(wchar_t token);
+		void OnGrammarFinished(wchar_t token);
+		void OnDecorating(wchar_t token);
+		void OnNestedBracket(wchar_t token);
+		void OnCloseBracket(wchar_t token);
 
-	private:
-		bool HasJonsung(void) const;
+		bool HasJonsung(void) const; // Korean grammar helper
 
 	private:
 		const Arguments& m_args;
