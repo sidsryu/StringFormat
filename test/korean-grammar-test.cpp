@@ -37,9 +37,9 @@ TEST_CASE("Decorate parameters by Korean grammar", "[korean][grammar]")
 
 	SECTION("Recursive decorated parameters with particles in Korean grammer")
 	{
-		auto format = L"{0:{1,은} $ {1,을}}";
-		auto result = CSFormatString::Format(format, { L"사과", L"오렌지" });
+		auto format = L"{0,를:$({1})}";
+		auto result = CSFormatString::Format(format, { L"사과", L"달다" });
 
-		CHECK(result == L"오렌지는 사과 오렌지를");
+		CHECK(result == L"사과(달다)를");
 	}
 }
