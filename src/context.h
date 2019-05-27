@@ -6,17 +6,16 @@ namespace string_format {
 namespace evaluator {
 	struct Context
 	{
-		std::wstring result;
-		std::wstring rootBracket;
-		std::wstring captured;
-		std::wstring affix;
-		std::wstring subBracket;
+		std::wstring result; // result
+		std::wstring rootBracket; // { inter-brackets text }
+		std::wstring captured; // replace parameter text from argument
+		std::wstring affix; // postfix for grammar
+		std::wstring subBracket; // for recursive brackets
 		std::wstring decorated;
-		int	enumIndex;
-		int restEnumerationDepth;
+		int	enumIndex; // mapping enumeration index
+		int restEnumerationDepth; // ignore rest enumeration (with recursived bracket) after mapping
 
 		Context();
-		~Context() = default;
 	};
 }
 }
