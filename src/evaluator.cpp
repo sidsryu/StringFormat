@@ -7,8 +7,8 @@ namespace string_format {
 		const std::shared_ptr<Dictionary>& dict)
 		: m_args(args)
 		, m_dict(dict)
-		, m_nFormatGroup(0)
-		, m_nEscapeBracketDepth(0)
+		, m_enumIndex(0)
+		, m_restEnumerationDepth(0)
 	{
 		// initial state
 		Trans(&Evaluator::OnPlainText);
@@ -21,260 +21,139 @@ namespace string_format {
 			Dispatch(token);
 		}
 
-		return m_strResult + m_strBracket;
+		return m_result + m_rootBracket;
 	}
 
 	void Evaluator::OnPlainText(wchar_t token)
 	{
-		if (token == L'{')
+		switch (token)
 		{
-			m_strBracket.clear();
-			m_strBracket.push_back(token);
-			Trans(&Evaluator::OnOpenBracket);
-		}
-		else
-		{
-			m_strResult.push_back(token);
+		case L'{':
+			m_rootBracket = { token };
+			Trans(&Evaluator::OnInRootBracket);
+			break;
+		default:
+			m_result.push_back(token);
+			break;
 		}
 	}
 
-	void Evaluator::OnOpenBracket(wchar_t token)
+	void Evaluator::OnInRootBracket(wchar_t token)
 	{
-		size_t nIndex = token - L'0';
-
-		if (0 <= nIndex && nIndex < 10)
+		switch (token)
 		{
-			if (nIndex < m_args.GetSize())
+		case L'0': // fall through
+		case L'1': // fall through
+		case L'2': // fall through
+		case L'3': // fall through
+		case L'4': // fall through
+		case L'5': // fall through
+		case L'6': // fall through
+		case L'7': // fall through
+		case L'8': // fall through
+		case L'9':
 			{
-				m_strCasting = m_args.GetString(nIndex);
-			}
-			else
-			{
-				m_strCasting.push_back(token);
-			}
+				int index = token - L'0';
+				if (index < m_args.GetSize())
+				{
+					m_captured = m_args.GetString(index);
+				}
+				else
+				{
+					m_captured += token;
+				}
 
-			m_strBracket.push_back(token);
-			Trans(&Evaluator::OnIndexed);
-		}
-		else
-		{
-			m_strBracket.push_back(token);
-			m_strResult += m_strBracket;
-			m_strBracket.clear();
+				m_rootBracket += token;
+				Trans(&Evaluator::OnArgumentCaptured);
+			}
+			break;
+		default:
+			m_result += m_rootBracket + token;
+			m_rootBracket = {};
 			Trans(&Evaluator::OnPlainText);
+			break;
 		}
 	}
 
-	void Evaluator::OnIndexed(wchar_t token)
+	void Evaluator::OnArgumentCaptured(wchar_t token)
 	{
 		switch (token)
 		{
 		case L'}':
-			m_strResult += m_strCasting + m_strPostfix;
-			m_strCasting.clear();
-			m_strPostfix.clear();
-			m_strBracket.clear();
+			m_result += m_captured + m_affix;
+			m_affix = {};
+			m_captured = {};
+			m_rootBracket = {};
 			Trans(&Evaluator::OnPlainText);
 			break;
 		case L',':
-			m_strBracket.push_back(token);
-			Trans(&Evaluator::OnGrammar);
+			m_rootBracket += token;
+			Trans(&Evaluator::OnProcessGrammar);
 			break;
 		case L':':
-			m_strBracket.push_back(token);
-			m_strFormat.clear();
-			m_nFormatGroup = 0;
-			Trans(&Evaluator::OnDecorating);
+			m_rootBracket += token;
+			Trans(&Evaluator::OnDecorate);
 			break;
 		default:
-			m_strBracket.push_back(token);
-			m_strResult += m_strBracket;
-			m_strBracket.clear();
+			m_result += m_rootBracket + token;
+			m_rootBracket = {};
 			Trans(&Evaluator::OnPlainText);
 			break;
 		}
 	}
 
-	void Evaluator::OnGrammar(wchar_t token)
+	void Evaluator::OnProcessGrammar(wchar_t token)
+	{
+		if (ProcessKorean(token)) return;
+		if (ProcessEnglish(token)) return;
+
+		m_result += m_rootBracket + token;
+		m_rootBracket = {};
+		Trans(&Evaluator::OnPlainText);
+	}
+
+	bool Evaluator::ProcessKorean(wchar_t token)
 	{
 		switch (token)
 		{
 		case L'을':
 		case L'를':
-			if (HasJonsung())	m_strPostfix.push_back(L'을');
-			else m_strPostfix.push_back(L'를');
-
-			m_strBracket.push_back(token);
-			Trans(&Evaluator::OnGrammarFinished);
+			m_affix = EndsInConsonant(m_captured) ? L'을' : L'를';
 			break;
 		case L'이':
 		case L'가':
-			if (HasJonsung())	m_strPostfix.push_back(L'이');
-			else m_strPostfix.push_back(L'가');
-
-			m_strBracket.push_back(token);
-			Trans(&Evaluator::OnGrammarFinished);
+			m_affix = EndsInConsonant(m_captured) ? L'이' : L'가';
 			break;
 		case L'은':
 		case L'는':
-			if (HasJonsung())	m_strPostfix.push_back(L'은');
-			else m_strPostfix.push_back(L'는');
-
-			m_strBracket.push_back(token);
-			Trans(&Evaluator::OnGrammarFinished);
-			break;
-		case L's':
-		case L'S':
-			if (m_dict != nullptr)
-			{
-				m_strCasting = m_dict->Plural(m_strCasting);
-			}
-
-			m_strBracket.push_back(token);
-			Trans(&Evaluator::OnGrammarFinished);
+			m_affix = EndsInConsonant(m_captured) ? L'은' : L'는';
 			break;
 		default:
-			m_strBracket.push_back(token);
-			m_strResult += m_strBracket;
-			m_strBracket.clear();
-			Trans(&Evaluator::OnPlainText);
-			break;
+			return false;
 		}
+
+		m_rootBracket += token;
+		Trans(&Evaluator::OnGrammarProcessed);
+		return true;
 	}
 
-	void Evaluator::OnGrammarFinished(wchar_t token)
+	bool Evaluator::EndsInConsonant(const std::wstring& word) const
 	{
-		switch (token)
-		{
-		case L'}':
-			m_strResult += m_strCasting + m_strPostfix;
-			m_strCasting.clear();
-			m_strPostfix.clear();
-			m_strBracket.clear();
-			Trans(&Evaluator::OnPlainText);
-			break;
-		case L':':
-			m_strBracket.push_back(token);
-			m_strFormat.clear();
-			m_nFormatGroup = 0;
-			Trans(&Evaluator::OnDecorating);
-			break;
-		default:
-			m_strBracket.push_back(token);
-			m_strResult += m_strBracket;
-			m_strBracket.clear();
-			Trans(&Evaluator::OnPlainText);
-			break;
-		}
-	}
+		if (word.empty()) return false;
 
-	void Evaluator::OnDecorating(wchar_t token)
-	{
-		switch (token)
-		{
-		case L'}':
-			m_strResult += m_strFormat + m_strPostfix;
-			m_strPostfix.clear();
-			m_strCasting.clear();
-			m_strBracket.clear();
-			Trans(&Evaluator::OnPlainText);
-			break;
-		case L'{':
-			m_strBracket.push_back(token);
-			m_strNestedBracket.clear();
-			m_strNestedBracket.push_back(token);
-			Trans(&Evaluator::OnNestedBracket);
-			break;
-		case L'$':
-			m_strBracket.push_back(token);
-			m_strFormat += m_strCasting;
-			break;
-		case L';':
-			if (m_nFormatGroup == _wtoi(m_strCasting.c_str()))
-			{
-				m_nEscapeBracketDepth = 1;
-				Trans(&Evaluator::OnCloseBracket);
-			}
-			else
-			{
-				m_strFormat.clear();
-				m_nFormatGroup++;
-			}
+		auto lastLetter = *word.rbegin();
 
-			m_strBracket.push_back(token);
-			break;
-		default:
-			m_strFormat.push_back(token);
-			m_strBracket.push_back(token);
-			break;
-		}
-	}
-
-	void Evaluator::OnNestedBracket(wchar_t token)
-	{
-		switch (token)
-		{
-		case L'}':
-			{
-				m_strNestedBracket.push_back(token);
-
-				Evaluator evaluator(m_args, m_dict);
-				m_strFormat += evaluator.Evaluate(m_strNestedBracket);
-
-				m_strBracket.push_back(token);
-				Trans(&Evaluator::OnDecorating);
-			}
-			break;
-		default:
-			m_strNestedBracket.push_back(token);
-			m_strBracket.push_back(token);
-			break;
-		}
-	}
-
-	void Evaluator::OnCloseBracket(wchar_t token)
-	{
-		switch (token)
-		{
-		case L'{':
-			m_nEscapeBracketDepth++;
-			m_strBracket.push_back(token);
-			break;
-		case L'}':
-			m_nEscapeBracketDepth--;
-			m_strBracket.push_back(token);
-
-			if (m_nEscapeBracketDepth == 0)
-			{
-				m_strResult += m_strFormat + m_strPostfix;
-				m_strCasting.clear();
-				m_strPostfix.clear();
-				m_strBracket.clear();
-				Trans(&Evaluator::OnPlainText);
-			}
-			break;
-		default:
-			m_strBracket.push_back(token);
-			break;
-		}
-	}
-
-	bool Evaluator::HasJonsung(void) const
-	{
-		if (m_strCasting.empty()) return false;
-
-
-		wchar_t lastLetter = *m_strCasting.rbegin();
-
-		// 유니코드 한글페이지
+		// Unicode Korean page [가-힣]
 		if (44032 <= lastLetter && lastLetter <= 55203)
 		{
+			// Extract the final consonant
 			return 0 != (lastLetter - 44032) % 28;
 		}
 		else
 		{
+			// Read Sino-Korean numbers
 			std::wstring letter(1, lastLetter);
-			switch (_wtoi(letter.c_str()) % 10)
+			switch (std::stoi(letter) % 10)
 			{
 			case 0:
 			case 1:
@@ -292,5 +171,135 @@ namespace string_format {
 		}
 
 		return true;
+	}
+
+	bool Evaluator::ProcessEnglish(wchar_t token)
+	{
+		switch (token)
+		{
+		case L's':
+		case L'S':
+			if (m_dict != nullptr) m_captured = m_dict->Plural(m_captured);
+			break;
+		default:
+			return false;
+		}
+
+		m_rootBracket += token;
+		Trans(&Evaluator::OnGrammarProcessed);
+		return true;
+	}
+
+	void Evaluator::OnGrammarProcessed(wchar_t token)
+	{
+		switch (token)
+		{
+		case L'}':
+			m_result += m_captured + m_affix;
+			m_affix = {};
+			m_captured = {};
+			m_rootBracket = {};
+			Trans(&Evaluator::OnPlainText);
+			break;
+		case L':':
+			m_rootBracket += token;
+			Trans(&Evaluator::OnDecorate);
+			break;
+		default:
+			m_result += m_rootBracket + token;
+			m_rootBracket = {};
+			Trans(&Evaluator::OnPlainText);
+			break;
+		}
+	}
+
+	void Evaluator::OnDecorate(wchar_t token)
+	{
+		switch (token)
+		{
+		case L'}':
+			m_result += m_decorated + m_affix;
+			m_affix = {};
+			m_captured = {};
+			m_rootBracket = {};
+			Trans(&Evaluator::OnPlainText);
+			break;
+		case L'{':
+			m_subBracket = token;
+			m_rootBracket += token;
+			Trans(&Evaluator::OnInSubBracket);
+			break;
+		case L';':
+			if (m_enumIndex == std::stoi(m_captured))
+			{
+				m_restEnumerationDepth = 1;
+				Trans(&Evaluator::OnIgnoreRestEnumeration);
+			}
+			else
+			{
+				m_enumIndex++;
+				m_decorated = {};
+			}
+
+			m_rootBracket.push_back(token);
+			break;
+		case L'$':
+			m_decorated += m_captured;
+			m_rootBracket += token;
+			break;
+		default:
+			m_decorated += token;
+			m_rootBracket += token;
+			break;
+		}
+	}
+
+	void Evaluator::OnInSubBracket(wchar_t token)
+	{
+		switch (token)
+		{
+		case L'}':
+			{
+				m_subBracket.push_back(token);
+
+				Evaluator evaluator(m_args, m_dict);
+				m_decorated += evaluator.Evaluate(m_subBracket);
+
+				m_rootBracket.push_back(token);
+				Trans(&Evaluator::OnDecorate);
+			}
+			break;
+		default:
+			m_subBracket.push_back(token);
+			m_rootBracket.push_back(token);
+			break;
+		}
+	}
+
+	void Evaluator::OnIgnoreRestEnumeration(wchar_t token)
+	{
+		switch (token)
+		{
+		case L'{':
+			m_restEnumerationDepth++;
+			m_rootBracket += token;
+			break;
+		case L'}':
+			m_restEnumerationDepth--;
+			m_rootBracket += token;
+
+			if (m_restEnumerationDepth == 0)
+			{
+				m_result += m_decorated + m_affix;
+				m_affix = {};
+				m_captured = {};
+				m_rootBracket = {};
+				Trans(&Evaluator::OnPlainText);
+			}
+			break;
+		default:
+			m_rootBracket += token;
+			break;
+		}
 	}
 }
