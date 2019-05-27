@@ -3,9 +3,9 @@
 
 CStringResMgr* CSFormatString::sm_pDictionary = NULL;
 
-std::wstring CSFormatString::Format(std::wstring formater, FSParam param)
+std::wstring CSFormatString::Format(std::wstring formater, const FSParam& params)
 {
-	FSContext context(param.GetParams(), sm_pDictionary);
+	FSContext context(params.GetParams(), sm_pDictionary);
 
 	for (wchar_t token : formater)
 	{
