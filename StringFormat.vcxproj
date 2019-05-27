@@ -42,14 +42,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -132,8 +132,6 @@
     <ClCompile Include="src\CStringResMgr.cpp" />
     <ClCompile Include="src\FSContext.cpp" />
     <ClCompile Include="src\FSFsm.cpp" />
-    <ClCompile Include="src\MLocale.cpp" />
-    <ClCompile Include="src\tstring-type.cpp" />
     <ClCompile Include="test\basic-test.cpp" />
     <ClCompile Include="test\english-grammar-test.cpp" />
     <ClCompile Include="test\korean-grammar-test.cpp" />
@@ -146,8 +144,6 @@
     <ClInclude Include="src\CStringResMgr.h" />
     <ClInclude Include="src\FSContext.h" />
     <ClInclude Include="src\FSFsm.h" />
-    <ClInclude Include="src\MLocale.h" />
-    <ClInclude Include="src\tstring-type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
