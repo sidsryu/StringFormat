@@ -9,7 +9,7 @@ VS2019 project. Copy all source files in `/src `.
 
 ## Normal Usage
 
-```
+```c++
 namespace sf = string_format;
 std::wstring result;
 
@@ -50,7 +50,7 @@ assert(result == L"100");
 
 ## Usage For Localize Korean 
 
-```
+```c++
 namespace sf = string_format;
 std::wstring result;
 
@@ -74,7 +74,7 @@ assert(result == L"사과(달다)는 맛있다.");
 
 ## Usage For Localize English
 
-```
+```c++
 namespace sf = string_format;
 std::wstring result;
 
