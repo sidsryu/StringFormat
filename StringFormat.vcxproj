@@ -127,11 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\CSFormatString.cpp" />
-    <ClCompile Include="src\CSFormatStringParameter.cpp" />
+    <ClCompile Include="src\arguments.cpp" />
     <ClCompile Include="src\dictionary.cpp" />
     <ClCompile Include="src\FSContext.cpp" />
     <ClCompile Include="src\FSFsm.cpp" />
+    <ClCompile Include="src\string-format.cpp" />
     <ClCompile Include="test\basic-test.cpp" />
     <ClCompile Include="test\english-grammar-test.cpp" />
     <ClCompile Include="test\korean-grammar-test.cpp" />
@@ -139,11 +139,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\catch.hpp" />
-    <ClInclude Include="src\CSFormatString.h" />
-    <ClInclude Include="src\CSFormatStringParameter.h" />
+    <ClInclude Include="src\arguments.h" />
     <ClInclude Include="src\dictionary.h" />
     <ClInclude Include="src\FSContext.h" />
     <ClInclude Include="src\FSFsm.h" />
+    <ClInclude Include="src\string-format.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

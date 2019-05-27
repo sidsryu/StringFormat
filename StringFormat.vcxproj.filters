@@ -12,12 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\CSFormatString.cpp">
-      <Filter>string-format</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CSFormatStringParameter.cpp">
-      <Filter>string-format</Filter>
-    </ClCompile>
     <ClCompile Include="src\FSContext.cpp">
       <Filter>string-format</Filter>
     </ClCompile>
@@ -39,14 +33,14 @@
     <ClCompile Include="src\dictionary.cpp">
       <Filter>string-format</Filter>
     </ClCompile>
+    <ClCompile Include="src\string-format.cpp">
+      <Filter>string-format</Filter>
+    </ClCompile>
+    <ClCompile Include="src\arguments.cpp">
+      <Filter>string-format</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\CSFormatString.h">
-      <Filter>string-format</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CSFormatStringParameter.h">
-      <Filter>string-format</Filter>
-    </ClInclude>
     <ClInclude Include="src\FSContext.h">
       <Filter>string-format</Filter>
     </ClInclude>
@@ -57,6 +51,12 @@
       <Filter>extern</Filter>
     </ClInclude>
     <ClInclude Include="src\dictionary.h">
+      <Filter>string-format</Filter>
+    </ClInclude>
+    <ClInclude Include="src\arguments.h">
+      <Filter>string-format</Filter>
+    </ClInclude>
+    <ClInclude Include="src\string-format.h">
       <Filter>string-format</Filter>
     </ClInclude>
   </ItemGroup>
