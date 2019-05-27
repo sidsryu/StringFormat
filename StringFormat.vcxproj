@@ -129,7 +129,7 @@
   <ItemGroup>
     <ClCompile Include="src\CSFormatString.cpp" />
     <ClCompile Include="src\CSFormatStringParameter.cpp" />
-    <ClCompile Include="src\CStringResMgr.cpp" />
+    <ClCompile Include="src\dictionary.cpp" />
     <ClCompile Include="src\FSContext.cpp" />
     <ClCompile Include="src\FSFsm.cpp" />
     <ClCompile Include="test\basic-test.cpp" />
@@ -141,7 +141,7 @@
     <ClInclude Include="extern\catch.hpp" />
     <ClInclude Include="src\CSFormatString.h" />
     <ClInclude Include="src\CSFormatStringParameter.h" />
-    <ClInclude Include="src\CStringResMgr.h" />
+    <ClInclude Include="src\dictionary.h" />
     <ClInclude Include="src\FSContext.h" />
     <ClInclude Include="src\FSFsm.h" />
   </ItemGroup>

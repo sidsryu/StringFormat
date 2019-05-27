@@ -1,5 +1,5 @@
 #include "FSContext.h"
-#include "CStringResMgr.h"
+#include "dictionary.h"
 
 FSContext::FSContext(const std::vector<std::wstring>& param, Dictionary* pDictionary)
 : m_vecParam(param)

@@ -1,1 +1,1 @@
-#include "CStringResMgr.h"
+#include "dictionary.h"
