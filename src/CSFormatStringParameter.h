@@ -3,116 +3,35 @@
 #include <string>
 #include <sstream>
 
-#define FSP_OPEN		L""
-#define FSP_CLOSE		L""
 #define FSP_SEPARATOR	L'|'
 
 struct FSParam
 {
 	std::wstring m_strParam;
 
-	FSParam()	
+	template<typename... Args>
+	FSParam(Args... args)
 	{
-		// do nothing
+		m_strParam = Serialize(args...);
 	}
 
-	template<typename Arg0>	
-	FSParam(Arg0 arg0)
+private:
+	template<typename First, typename... Rest>
+	std::wstring Serialize(First first, Rest... rest)
 	{
-		std::wstringstream stream;		
-		stream << FSP_OPEN;
-		stream << arg0;
-		stream << FSP_CLOSE;		
-		m_strParam = stream.str();
+		std::wstringstream ss;
+		ss << first;
+
+		if (0 < sizeof...(rest))
+		{
+			ss << FSP_SEPARATOR << Serialize(rest...);
+		}
+
+		return ss.str();
 	}
 
-	template<typename Arg0, typename Arg1>
-	FSParam(Arg0 arg0, Arg1 arg1)
+	std::wstring Serialize()
 	{
-		std::wstringstream stream;
-		stream << FSP_OPEN;
-		stream << arg0 << FSP_SEPARATOR << arg1;
-		stream << FSP_CLOSE;
-		m_strParam = stream.str();
-	}
-
-	template<typename Arg0, typename Arg1, typename Arg2>
-	FSParam(Arg0 arg0, Arg1 arg1, Arg2 arg2)
-	{
-		std::wstringstream stream;
-		stream << FSP_OPEN;
-		stream << arg0 << FSP_SEPARATOR << arg1 << FSP_SEPARATOR << arg2;
-		stream << FSP_CLOSE;
-		m_strParam = stream.str();
-	}
-
-	template<typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-	FSParam(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3)
-	{
-		std::wstringstream stream;
-		stream << FSP_OPEN;
-		stream << arg0 << FSP_SEPARATOR << arg1 << FSP_SEPARATOR << arg2 << FSP_SEPARATOR << arg3;
-		stream << FSP_CLOSE;
-		m_strParam = stream.str();
-	}
-
-	template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-	FSParam(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
-	{
-		std::wstringstream stream;
-		stream << FSP_OPEN;
-		stream << arg0 << FSP_SEPARATOR << arg1 << FSP_SEPARATOR << arg2 << FSP_SEPARATOR << arg3 << FSP_SEPARATOR << arg4;
-		stream << FSP_CLOSE;
-		m_strParam = stream.str();
-	}
-
-	template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
-	FSParam(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5)
-	{
-		std::wstringstream stream;
-		stream << FSP_OPEN;
-		stream << arg0 << FSP_SEPARATOR << arg1 << FSP_SEPARATOR << arg2 << FSP_SEPARATOR << arg3 << FSP_SEPARATOR << arg4 << FSP_SEPARATOR << arg5;
-		stream << FSP_CLOSE;
-		m_strParam = stream.str();
-	}
-
-	template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
-	FSParam(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6)
-	{
-		std::wstringstream stream;
-		stream << FSP_OPEN;
-		stream << arg0 << FSP_SEPARATOR << arg1 << FSP_SEPARATOR << arg2 << FSP_SEPARATOR << arg3 << FSP_SEPARATOR << arg4 << FSP_SEPARATOR << arg5 << FSP_SEPARATOR << arg6;
-		stream << FSP_CLOSE;
-		m_strParam = stream.str();
-	}
-
-	template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7>
-	FSParam(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7)
-	{
-		std::wstringstream stream;
-		stream << FSP_OPEN;
-		stream << arg0 << FSP_SEPARATOR << arg1 << FSP_SEPARATOR << arg2 << FSP_SEPARATOR << arg3 << FSP_SEPARATOR << arg4 << FSP_SEPARATOR << arg5 << FSP_SEPARATOR << arg6 << FSP_SEPARATOR << arg7;
-		stream << FSP_CLOSE;
-		m_strParam = stream.str();
-	}
-
-	template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7, typename Arg8>
-	FSParam(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7, Arg8 arg8)
-	{
-		std::wstringstream stream;
-		stream << FSP_OPEN;
-		stream << arg0 << FSP_SEPARATOR << arg1 << FSP_SEPARATOR << arg2 << FSP_SEPARATOR << arg3 << FSP_SEPARATOR << arg4 << FSP_SEPARATOR << arg5 << FSP_SEPARATOR << arg6 << FSP_SEPARATOR << arg7 << FSP_SEPARATOR << arg8;
-		stream << FSP_CLOSE;
-		m_strParam = stream.str();
-	}
-
-	template<typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7, typename Arg8, typename Arg9>
-	FSParam(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7, Arg8 arg8, Arg9 arg9)
-	{
-		std::wstringstream stream;
-		stream << FSP_OPEN;
-		stream << arg0 << FSP_SEPARATOR << arg1 << FSP_SEPARATOR << arg2 << FSP_SEPARATOR << arg3 << FSP_SEPARATOR << arg4 << FSP_SEPARATOR << arg5 << FSP_SEPARATOR << arg6 << FSP_SEPARATOR << arg7 << FSP_SEPARATOR << arg8 << FSP_SEPARATOR << arg9;
-		stream << FSP_CLOSE;
-		m_strParam = stream.str();
+		return {};
 	}
 };
