@@ -10,7 +10,7 @@ TEST_CASE("Decorate parameters by English grammar", "[english][grammar]")
 	SECTION("Casting plural parameters")
 	{
 		auto format = L"{0}, {0,s}";
-		auto result = CSFormatString::Format(format, { L"wolf" });
+		auto result = CSFormatString::Format(format, L"wolf");
 
 		CHECK(result == L"wolf, wolves");
 	}

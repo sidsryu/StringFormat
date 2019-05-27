@@ -14,8 +14,10 @@ public:
 		return Format(formater, FSParam{ args... });
 	}
 
-	static std::wstring Format(std::wstring formater, const FSParam& params);
 	static void SetDictionary(CStringResMgr* pDictionary);
+
+private:
+	static std::wstring Format(std::wstring formater, const FSParam& params);	
 
 private:
 	static CStringResMgr* sm_pDictionary;
