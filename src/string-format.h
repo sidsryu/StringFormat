@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CSFormatStringParameter.h"
+#include "arguments.h"
 #include <string>
 #include <memory>
 

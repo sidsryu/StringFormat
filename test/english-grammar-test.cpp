@@ -1,5 +1,5 @@
 #include "../extern/catch.hpp"
-#include "../src/CSFormatString.h"
+#include "../src/string-format.h"
 #include "../src/dictionary.h"
 
 TEST_CASE("Decorate parameters by English grammar", "[english][grammar]")

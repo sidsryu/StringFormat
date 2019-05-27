@@ -1,4 +1,4 @@
-#include "CSFormatStringParameter.h"
+#include "arguments.h"
 
 namespace string_format {
 	const std::vector<std::wstring>& Arguments::GetStrings() const

@@ -1,5 +1,5 @@
 #include "../extern/catch.hpp"
-#include "../src/CSFormatString.h"
+#include "../src/string-format.h"
 
 TEST_CASE("Output replaced a string from a formated string with prarmeters", "[basic]")
 {	
