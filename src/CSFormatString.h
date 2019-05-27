@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-class CStringResMgr;
+class Dictionary;
 
 namespace CSFormatString {
 	template<typename... Args>
@@ -13,7 +13,7 @@ namespace CSFormatString {
 		return detail::Format(formater, FSParam{ args... });
 	}
 
-	CStringResMgr* SetDictionary(CStringResMgr* dictionary);
+	std::shared_ptr<Dictionary> SetDictionary(std::shared_ptr<Dictionary> dictionary);
 
 	namespace detail {
 		std::wstring Format(const std::wstring& formater, const FSParam& params);

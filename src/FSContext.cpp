@@ -1,7 +1,7 @@
 #include "FSContext.h"
 #include "CStringResMgr.h"
 
-FSContext::FSContext(const std::vector<std::wstring>& param, CStringResMgr* pDictionary)
+FSContext::FSContext(const std::vector<std::wstring>& param, Dictionary* pDictionary)
 : m_vecParam(param)
 , m_pDictionary(pDictionary)
 {

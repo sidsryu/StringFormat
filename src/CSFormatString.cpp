@@ -3,10 +3,10 @@
 
 namespace CSFormatString {
 	namespace {
-		CStringResMgr* g_dictionary = nullptr;
+		std::shared_ptr<Dictionary> g_dictionary;
 	}
 
-	CStringResMgr* SetDictionary(CStringResMgr* dictionary)
+	std::shared_ptr<Dictionary> SetDictionary(std::shared_ptr<Dictionary> dictionary)
 	{
 		std::swap(g_dictionary, dictionary);
 		return dictionary;
@@ -15,7 +15,7 @@ namespace CSFormatString {
 	namespace detail {
 		std::wstring Format(const std::wstring& formater, const FSParam& params)
 		{
-			FSContext context(params.GetParams(), g_dictionary);
+			FSContext context(params.GetParams(), g_dictionary.get());
 			for (wchar_t token : formater)
 			{
 				context.Dispatch(token);

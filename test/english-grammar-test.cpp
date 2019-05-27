@@ -4,8 +4,16 @@
 
 TEST_CASE("Decorate parameters by English grammar", "[english][grammar]")
 {
-	CStringResMgr dictionary;
-	CSFormatString::SetDictionary(&dictionary);
+	class EnglishDictionary : public Dictionary
+	{
+	public:
+		virtual std::wstring Plural(const std::wstring& singular) override
+		{
+			return L"wolves";
+		}
+	};
+
+	auto old = CSFormatString::SetDictionary(std::make_shared<EnglishDictionary>());
 
 	SECTION("Casting plural parameters")
 	{
@@ -15,5 +23,5 @@ TEST_CASE("Decorate parameters by English grammar", "[english][grammar]")
 		CHECK(result == L"wolf, wolves");
 	}
 
-	CSFormatString::SetDictionary(nullptr);
+	CSFormatString::SetDictionary(old);
 }

@@ -4,12 +4,12 @@
 #include <vector>
 #include <string>
 
-class CStringResMgr;
+class Dictionary;
 
 class FSContext: public FSFsm<FSContext>
 {
 public:
-	FSContext(const std::vector<std::wstring>& param, CStringResMgr* pDictionary = NULL);
+	FSContext(const std::vector<std::wstring>& param, Dictionary* pDictionary = NULL);
 	virtual ~FSContext();
 
 	std::wstring GetResult(void) const;
@@ -37,5 +37,5 @@ private:
 	int m_nEscapeBracketDepth;
 
 	std::vector<std::wstring> m_vecParam;
-	CStringResMgr* m_pDictionary;
+	Dictionary* m_pDictionary;
 };
