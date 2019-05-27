@@ -1,37 +1,24 @@
 #pragma once
 
-#include <string>
+#include <vector>
 #include <sstream>
 
-#define FSP_SEPARATOR	L'|'
-
-struct FSParam
+class FSParam
 {
-	std::wstring m_strParam;
-
-	template<typename... Args>
-	FSParam(Args... args)
-	{
-		m_strParam = Serialize(args...);
-	}
-
-private:
+public:
 	template<typename First, typename... Rest>
-	std::wstring Serialize(First first, Rest... rest)
+	FSParam(First first, Rest... rest) : FSParam(rest...)
 	{
 		std::wstringstream ss;
 		ss << first;
-
-		if (0 < sizeof...(rest))
-		{
-			ss << FSP_SEPARATOR << Serialize(rest...);
-		}
-
-		return ss.str();
+		m_listofParam.insert(m_listofParam.begin(), ss.str());
 	}
 
-	std::wstring Serialize()
-	{
-		return {};
-	}
+	FSParam() 
+	{}
+
+	const std::vector<std::wstring>& GetParams() const;
+
+private:
+	std::vector<std::wstring> m_listofParam;
 };

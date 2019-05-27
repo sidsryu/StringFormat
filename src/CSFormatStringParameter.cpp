@@ -1,3 +1,6 @@
 #include "CSFormatStringParameter.h"
 
-// do nothing
+const std::vector<std::wstring>& FSParam::GetParams() const
+{
+	return m_listofParam;
+}
