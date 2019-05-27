@@ -10,11 +10,8 @@ namespace string_format {
 	public:
 		using State = void (Derived::*)(wchar_t token);
 
-		StateMethodFsm() : m_method(nullptr)
-		{}
-
-		virtual ~StateMethodFsm()
-		{}
+		StateMethodFsm() : m_method(nullptr) {}
+		virtual ~StateMethodFsm() = default;
 
 		void Dispatch(wchar_t token)
 		{

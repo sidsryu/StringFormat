@@ -1,31 +1,36 @@
 #include "FSContext.h"
+#include "arguments.h"
 #include "dictionary.h"
 
 namespace string_format {
-	FSContext::FSContext(const std::vector<std::wstring>& param, Dictionary* pDictionary)
-		: m_vecParam(param)
-		, m_pDictionary(pDictionary)
+	Evaluator::Evaluator(const Arguments& args,
+		const std::shared_ptr<Dictionary>& dict)
+		: m_args(args)
+		, m_dict(dict)
+		, m_nFormatGroup(0)
+		, m_nEscapeBracketDepth(0)
 	{
-		Trans(&FSContext::NormalTextState);
+		// initial state
+		Trans(&Evaluator::NormalTextState);
 	}
 
-	FSContext::~FSContext()
+	std::wstring Evaluator::Evaluate(std::wstring formater)
 	{
-		// do nothing
-	}
+		for (wchar_t token : formater)
+		{
+			Dispatch(token);
+		}
 
-	std::wstring FSContext::GetResult(void) const
-	{
 		return m_strResult + m_strBracket;
 	}
 
-	void FSContext::NormalTextState(wchar_t token)
+	void Evaluator::NormalTextState(wchar_t token)
 	{
 		if (token == L'{')
 		{
 			m_strBracket.clear();
 			m_strBracket.push_back(token);
-			Trans(&FSContext::OpeningBracketState);
+			Trans(&Evaluator::OpeningBracketState);
 		}
 		else
 		{
@@ -33,15 +38,15 @@ namespace string_format {
 		}
 	}
 
-	void FSContext::OpeningBracketState(wchar_t token)
+	void Evaluator::OpeningBracketState(wchar_t token)
 	{
 		size_t nIndex = token - L'0';
 
 		if (0 <= nIndex && nIndex < 10)
 		{
-			if (nIndex < m_vecParam.size())
+			if (nIndex < m_args.GetSize())
 			{
-				m_strCasting = m_vecParam.at(nIndex);
+				m_strCasting = m_args.GetString(nIndex);
 			}
 			else
 			{
@@ -49,18 +54,18 @@ namespace string_format {
 			}
 
 			m_strBracket.push_back(token);
-			Trans(&FSContext::IndexState);
+			Trans(&Evaluator::IndexState);
 		}
 		else
 		{
 			m_strBracket.push_back(token);
 			m_strResult += m_strBracket;
 			m_strBracket.clear();
-			Trans(&FSContext::NormalTextState);
+			Trans(&Evaluator::NormalTextState);
 		}
 	}
 
-	void FSContext::IndexState(wchar_t token)
+	void Evaluator::IndexState(wchar_t token)
 	{
 		switch (token)
 		{
@@ -69,28 +74,28 @@ namespace string_format {
 			m_strCasting.clear();
 			m_strPostfix.clear();
 			m_strBracket.clear();
-			Trans(&FSContext::NormalTextState);
+			Trans(&Evaluator::NormalTextState);
 			break;
 		case L',':
 			m_strBracket.push_back(token);
-			Trans(&FSContext::CastingState);
+			Trans(&Evaluator::CastingState);
 			break;
 		case L':':
 			m_strBracket.push_back(token);
 			m_strFormat.clear();
 			m_nFormatGroup = 0;
-			Trans(&FSContext::FormatState);
+			Trans(&Evaluator::FormatState);
 			break;
 		default:
 			m_strBracket.push_back(token);
 			m_strResult += m_strBracket;
 			m_strBracket.clear();
-			Trans(&FSContext::NormalTextState);
+			Trans(&Evaluator::NormalTextState);
 			break;
 		}
 	}
 
-	void FSContext::CastingState(wchar_t token)
+	void Evaluator::CastingState(wchar_t token)
 	{
 		switch (token)
 		{
@@ -100,7 +105,7 @@ namespace string_format {
 			else m_strPostfix.push_back(L'를');
 
 			m_strBracket.push_back(token);
-			Trans(&FSContext::CastEndState);
+			Trans(&Evaluator::CastEndState);
 			break;
 		case L'이':
 		case L'가':
@@ -108,7 +113,7 @@ namespace string_format {
 			else m_strPostfix.push_back(L'가');
 
 			m_strBracket.push_back(token);
-			Trans(&FSContext::CastEndState);
+			Trans(&Evaluator::CastEndState);
 			break;
 		case L'은':
 		case L'는':
@@ -116,28 +121,28 @@ namespace string_format {
 			else m_strPostfix.push_back(L'는');
 
 			m_strBracket.push_back(token);
-			Trans(&FSContext::CastEndState);
+			Trans(&Evaluator::CastEndState);
 			break;
 		case L's':
 		case L'S':
-			if (m_pDictionary != NULL)
+			if (m_dict != nullptr)
 			{
-				m_strCasting = m_pDictionary->Plural(m_strCasting);
+				m_strCasting = m_dict->Plural(m_strCasting);
 			}
 
 			m_strBracket.push_back(token);
-			Trans(&FSContext::CastEndState);
+			Trans(&Evaluator::CastEndState);
 			break;
 		default:
 			m_strBracket.push_back(token);
 			m_strResult += m_strBracket;
 			m_strBracket.clear();
-			Trans(&FSContext::NormalTextState);
+			Trans(&Evaluator::NormalTextState);
 			break;
 		}
 	}
 
-	void FSContext::CastEndState(wchar_t token)
+	void Evaluator::CastEndState(wchar_t token)
 	{
 		switch (token)
 		{
@@ -146,24 +151,24 @@ namespace string_format {
 			m_strCasting.clear();
 			m_strPostfix.clear();
 			m_strBracket.clear();
-			Trans(&FSContext::NormalTextState);
+			Trans(&Evaluator::NormalTextState);
 			break;
 		case L':':
 			m_strBracket.push_back(token);
 			m_strFormat.clear();
 			m_nFormatGroup = 0;
-			Trans(&FSContext::FormatState);
+			Trans(&Evaluator::FormatState);
 			break;
 		default:
 			m_strBracket.push_back(token);
 			m_strResult += m_strBracket;
 			m_strBracket.clear();
-			Trans(&FSContext::NormalTextState);
+			Trans(&Evaluator::NormalTextState);
 			break;
 		}
 	}
 
-	void FSContext::FormatState(wchar_t token)
+	void Evaluator::FormatState(wchar_t token)
 	{
 		switch (token)
 		{
@@ -172,13 +177,13 @@ namespace string_format {
 			m_strPostfix.clear();
 			m_strCasting.clear();
 			m_strBracket.clear();
-			Trans(&FSContext::NormalTextState);
+			Trans(&Evaluator::NormalTextState);
 			break;
 		case L'{':
 			m_strBracket.push_back(token);
 			m_strNestedBracket.clear();
 			m_strNestedBracket.push_back(token);
-			Trans(&FSContext::NestedBracketState);
+			Trans(&Evaluator::NestedBracketState);
 			break;
 		case L'$':
 			m_strBracket.push_back(token);
@@ -188,7 +193,7 @@ namespace string_format {
 			if (m_nFormatGroup == _wtoi(m_strCasting.c_str()))
 			{
 				m_nEscapeBracketDepth = 1;
-				Trans(&FSContext::EscapeBracketState);
+				Trans(&Evaluator::EscapeBracketState);
 			}
 			else
 			{
@@ -205,26 +210,20 @@ namespace string_format {
 		}
 	}
 
-	void FSContext::NestedBracketState(wchar_t token)
+	void Evaluator::NestedBracketState(wchar_t token)
 	{
 		switch (token)
 		{
 		case L'}':
-			m_strNestedBracket.push_back(token);
-
 			{
-				FSContext context(m_vecParam, m_pDictionary);
+				m_strNestedBracket.push_back(token);
 
-				for (wchar_t nestedToken : m_strNestedBracket)
-				{
-					context.Dispatch(nestedToken);
-				}
+				Evaluator evaluator(m_args, m_dict);
+				m_strFormat += evaluator.Evaluate(m_strNestedBracket);
 
-				m_strFormat += context.GetResult();
+				m_strBracket.push_back(token);
+				Trans(&Evaluator::FormatState);
 			}
-
-			m_strBracket.push_back(token);
-			Trans(&FSContext::FormatState);
 			break;
 		default:
 			m_strNestedBracket.push_back(token);
@@ -233,7 +232,7 @@ namespace string_format {
 		}
 	}
 
-	void FSContext::EscapeBracketState(wchar_t token)
+	void Evaluator::EscapeBracketState(wchar_t token)
 	{
 		switch (token)
 		{
@@ -251,7 +250,7 @@ namespace string_format {
 				m_strCasting.clear();
 				m_strPostfix.clear();
 				m_strBracket.clear();
-				Trans(&FSContext::NormalTextState);
+				Trans(&Evaluator::NormalTextState);
 			}
 			break;
 		default:
@@ -260,7 +259,7 @@ namespace string_format {
 		}
 	}
 
-	bool FSContext::HasJonsung(void) const
+	bool Evaluator::HasJonsung(void) const
 	{
 		if (m_strCasting.empty()) return false;
 

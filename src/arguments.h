@@ -15,10 +15,10 @@ namespace string_format {
 			m_listofArgument.insert(m_listofArgument.begin(), ss.str());
 		}
 
-		Arguments()
-		{}
+		Arguments() = default;
 
-		const std::vector<std::wstring>& GetStrings() const;
+		size_t GetSize() const;
+		std::wstring GetString(size_t idx) const;
 
 	private:
 		std::vector<std::wstring> m_listofArgument;
