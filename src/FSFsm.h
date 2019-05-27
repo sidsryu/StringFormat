@@ -1,37 +1,33 @@
 #pragma once
 
 #include <cassert>
+#include <functional>
 
 namespace string_format {
-	template <typename Derive>
-	class FSFsm
+	template<typename Derived>
+	class StateMethodFsm
 	{
 	public:
-		typedef void (Derive::* FSState)(wchar_t token);
+		using State = void (Derived::*)(wchar_t token);
 
-	public:
-		FSFsm() : m_state(nullptr)
-		{
-			// do nothing
-		}
+		StateMethodFsm() : m_method(nullptr)
+		{}
 
-		virtual ~FSFsm()
-		{
-			// do nothing
-		}
+		virtual ~StateMethodFsm()
+		{}
 
 		void Dispatch(wchar_t token)
 		{
-			assert(m_state != nullptr);
-			(((Derive*)this)->*m_state)(token);
+			assert(m_method != nullptr);
+			std::mem_fn(m_method)(static_cast<Derived*>(this), token);
 		}
 
-		void Trans(FSState state)
+		void Trans(State method)
 		{
-			m_state = state;
+			m_method = method;
 		}
 
 	private:
-		FSState m_state;
+		State m_method;
 	};
 }

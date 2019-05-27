@@ -7,7 +7,7 @@
 namespace string_format {
 	class Dictionary;
 
-	class FSContext : public FSFsm<FSContext>
+	class FSContext : public StateMethodFsm<FSContext>
 	{
 	public:
 		FSContext(const std::vector<std::wstring>& param, Dictionary* pDictionary = NULL);

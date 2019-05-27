@@ -10,14 +10,11 @@
     <Filter Include="extern">
       <UniqueIdentifier>{3285d4f9-4ae7-4050-b272-448f20e97ab2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="parser">
+      <UniqueIdentifier>{9457b751-5ae1-4f42-ae85-aa8f6392ed24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\FSContext.cpp">
-      <Filter>string-format</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FSFsm.cpp">
-      <Filter>string-format</Filter>
-    </ClCompile>
     <ClCompile Include="test\test-main.cpp">
       <Filter>test</Filter>
     </ClCompile>
@@ -39,14 +36,14 @@
     <ClCompile Include="src\arguments.cpp">
       <Filter>string-format</Filter>
     </ClCompile>
+    <ClCompile Include="src\FSContext.cpp">
+      <Filter>parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FSFsm.cpp">
+      <Filter>parser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\FSContext.h">
-      <Filter>string-format</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FSFsm.h">
-      <Filter>string-format</Filter>
-    </ClInclude>
     <ClInclude Include="extern\catch.hpp">
       <Filter>extern</Filter>
     </ClInclude>
@@ -58,6 +55,12 @@
     </ClInclude>
     <ClInclude Include="src\string-format.h">
       <Filter>string-format</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FSContext.h">
+      <Filter>parser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FSFsm.h">
+      <Filter>parser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
