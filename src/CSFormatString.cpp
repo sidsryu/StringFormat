@@ -13,9 +13,9 @@ namespace string_format {
 	}
 
 	namespace detail {
-		std::wstring Format(const std::wstring& formater, const FSParam& params)
+		std::wstring Format(const std::wstring& formater, const Arguments& args)
 		{
-			FSContext context(params.GetParams(), g_dictionary.get());
+			FSContext context(args.GetStrings(), g_dictionary.get());
 			for (wchar_t token : formater)
 			{
 				context.Dispatch(token);

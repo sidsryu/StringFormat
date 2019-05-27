@@ -4,23 +4,23 @@
 #include <sstream>
 
 namespace string_format {
-	class FSParam
+	class Arguments
 	{
 	public:
 		template<typename First, typename... Rest>
-		FSParam(First first, Rest... rest) : FSParam(rest...)
+		Arguments(First first, Rest... rest) : Arguments(rest...)
 		{
 			std::wstringstream ss;
 			ss << first;
-			m_listofParam.insert(m_listofParam.begin(), ss.str());
+			m_listofArgument.insert(m_listofArgument.begin(), ss.str());
 		}
 
-		FSParam()
+		Arguments()
 		{}
 
-		const std::vector<std::wstring>& GetParams() const;
+		const std::vector<std::wstring>& GetStrings() const;
 
 	private:
-		std::vector<std::wstring> m_listofParam;
+		std::vector<std::wstring> m_listofArgument;
 	};
 }
