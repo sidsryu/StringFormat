@@ -63,28 +63,51 @@ TEST_CASE("Output replaced a string from a formated string with prarmeters", "[b
 	{
 		auto format = L"{0:zero;one;many}";
 
-		SECTION("Enumerated parameters at first")
+		SECTION("at first")
 		{
 			auto result = CSFormatString::Format(format, { 0 });
 			CHECK(result == L"zero");
 		}
 
-		SECTION("Enumerated parameters at second")
+		SECTION("at second")
 		{
 			auto result = CSFormatString::Format(format, { 1 });
 			CHECK(result == L"one");
 		}
 
-		SECTION("Enumerated parameters at third")
+		SECTION("at third")
 		{
 			auto result = CSFormatString::Format(format, { 2 });
 			CHECK(result == L"many");
 		}
 
-		SECTION("Enumerated parameters at overflow")
+		SECTION("at overflow")
 		{
 			auto result = CSFormatString::Format(format, { 10 });
 			CHECK(result == L"many");
+		}
+	}
+
+	SECTION("Recursive enumerated parameters")
+	{
+		auto format = L"{2:$;{0};{1}}";
+
+		SECTION("at first")
+		{
+			auto result = CSFormatString::Format(format, { L"apple", L"orange", 0 });
+			CHECK(result == L"0");
+		}
+
+		SECTION("at second")
+		{
+			auto result = CSFormatString::Format(format, { L"apple", L"orange", 1 });
+			CHECK(result == L"apple");
+		}
+
+		SECTION("at third")
+		{
+			auto result = CSFormatString::Format(format, { L"apple", L"orange", 2 });
+			CHECK(result == L"orange");
 		}
 	}
 }
