@@ -2,11 +2,11 @@
 #include "../src/CSFormatString.h"
 
 TEST_CASE("Output replaced a string from a formated string with prarmeters", "[basic]")
-{
+{	
 	SECTION("No arguments")
 	{
 		auto format = L"test {0}, {1}, {2}";
-		auto result = CSFormatString::Format(format);
+		auto result = string_format::Format(format);
 
 		CHECK(result == L"test 0, 1, 2");
 	}
@@ -14,7 +14,7 @@ TEST_CASE("Output replaced a string from a formated string with prarmeters", "[b
 	SECTION("Number type arguments")
 	{
 		auto format = L"test {0}, {1}";
-		auto result = CSFormatString::Format(format, 100, 3.14);
+		auto result = string_format::Format(format, 100, 3.14);
 
 		CHECK(result == L"test 100, 3.14");
 	}
@@ -22,7 +22,7 @@ TEST_CASE("Output replaced a string from a formated string with prarmeters", "[b
 	SECTION("Empty string arguments")
 	{
 		auto format = L"test {0}{1}{2}";
-		auto result = CSFormatString::Format(format, L"first", L"", L"third");
+		auto result = string_format::Format(format, L"first", L"", L"third");
 
 		CHECK(result == L"test firstthird");
 	}
@@ -30,7 +30,7 @@ TEST_CASE("Output replaced a string from a formated string with prarmeters", "[b
 	SECTION("Empty string arguments")
 	{
 		auto format = L"test {0}{1}{2}";
-		auto result = CSFormatString::Format(format, L"", L"second", L"");
+		auto result = string_format::Format(format, L"", L"second", L"");
 
 		CHECK(result == L"test second");
 	}
@@ -38,7 +38,7 @@ TEST_CASE("Output replaced a string from a formated string with prarmeters", "[b
 	SECTION("Use multiple placed parameters")
 	{
 		auto format = L"{0}, {1}, {0}";
-		auto result = CSFormatString::Format(format, L"apple", L"orange");
+		auto result = string_format::Format(format, L"apple", L"orange");
 
 		CHECK(result == L"apple, orange, apple");
 	}
@@ -46,7 +46,7 @@ TEST_CASE("Output replaced a string from a formated string with prarmeters", "[b
 	SECTION("Use free placed parameters")
 	{
 		auto format = L"{2}, {0}, {1}";
-		auto result = CSFormatString::Format(format, L"apple", L"orange", L"banana");
+		auto result = string_format::Format(format, L"apple", L"orange", L"banana");
 
 		CHECK(result == L"banana, apple, orange");
 	}
@@ -54,7 +54,7 @@ TEST_CASE("Output replaced a string from a formated string with prarmeters", "[b
 	SECTION("Casting decorated parameters")
 	{
 		auto format = L"{0:<<$>>}";
-		auto result = CSFormatString::Format(format, L"apple");
+		auto result = string_format::Format(format, L"apple");
 
 		CHECK(result == L"<<apple>>");
 	}
@@ -62,7 +62,7 @@ TEST_CASE("Output replaced a string from a formated string with prarmeters", "[b
 	SECTION("Recursive decorated parameters")
 	{
 		auto format = L"{0:{1}${1}}";
-		auto result = CSFormatString::Format(format, L"apple", L"~~");
+		auto result = string_format::Format(format, L"apple", L"~~");
 
 		CHECK(result == L"~~apple~~");
 	}
@@ -73,25 +73,25 @@ TEST_CASE("Output replaced a string from a formated string with prarmeters", "[b
 
 		SECTION("at first")
 		{
-			auto result = CSFormatString::Format(format, 0);
+			auto result = string_format::Format(format, 0);
 			CHECK(result == L"zero");
 		}
 
 		SECTION("at second")
 		{
-			auto result = CSFormatString::Format(format, 1);
+			auto result = string_format::Format(format, 1);
 			CHECK(result == L"one");
 		}
 
 		SECTION("at third")
 		{
-			auto result = CSFormatString::Format(format, 2);
+			auto result = string_format::Format(format, 2);
 			CHECK(result == L"many");
 		}
 
 		SECTION("at overflow")
 		{
-			auto result = CSFormatString::Format(format, 10);
+			auto result = string_format::Format(format, 10);
 			CHECK(result == L"many");
 		}
 	}
@@ -102,19 +102,19 @@ TEST_CASE("Output replaced a string from a formated string with prarmeters", "[b
 
 		SECTION("at first")
 		{
-			auto result = CSFormatString::Format(format, L"apple", L"orange", 0);
+			auto result = string_format::Format(format, L"apple", L"orange", 0);
 			CHECK(result == L"0");
 		}
 
 		SECTION("at second")
 		{
-			auto result = CSFormatString::Format(format, L"apple", L"orange", 1);
+			auto result = string_format::Format(format, L"apple", L"orange", 1);
 			CHECK(result == L"apple");
 		}
 
 		SECTION("at third")
 		{
-			auto result = CSFormatString::Format(format, L"apple", L"orange", 2);
+			auto result = string_format::Format(format, L"apple", L"orange", 2);
 			CHECK(result == L"orange");
 		}
 	}

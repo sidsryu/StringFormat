@@ -1,7 +1,7 @@
 #include "CSFormatString.h"
 #include "FSContext.h"
 
-namespace CSFormatString {
+namespace string_format {
 	namespace {
 		std::shared_ptr<Dictionary> g_dictionary;
 	}

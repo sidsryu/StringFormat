@@ -4,7 +4,7 @@
 
 TEST_CASE("Decorate parameters by English grammar", "[english][grammar]")
 {
-	class EnglishDictionary : public Dictionary
+	class EnglishDictionary : public string_format::Dictionary
 	{
 	public:
 		virtual std::wstring Plural(const std::wstring& singular) override
@@ -13,15 +13,15 @@ TEST_CASE("Decorate parameters by English grammar", "[english][grammar]")
 		}
 	};
 
-	auto old = CSFormatString::SetDictionary(std::make_shared<EnglishDictionary>());
+	auto old = string_format::SetDictionary(std::make_shared<EnglishDictionary>());
 
 	SECTION("Casting plural parameters")
 	{
 		auto format = L"{0}, {0,s}";
-		auto result = CSFormatString::Format(format, L"wolf");
+		auto result = string_format::Format(format, L"wolf");
 
 		CHECK(result == L"wolf, wolves");
 	}
 
-	CSFormatString::SetDictionary(old);
+	string_format::SetDictionary(old);
 }

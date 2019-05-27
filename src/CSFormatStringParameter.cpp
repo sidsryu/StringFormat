@@ -1,6 +1,8 @@
 #include "CSFormatStringParameter.h"
 
-const std::vector<std::wstring>& FSParam::GetParams() const
-{
-	return m_listofParam;
+namespace string_format {
+	const std::vector<std::wstring>& FSParam::GetParams() const
+	{
+		return m_listofParam;
+	}
 }

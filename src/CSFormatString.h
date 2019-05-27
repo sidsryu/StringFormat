@@ -4,9 +4,9 @@
 #include <string>
 #include <memory>
 
-class Dictionary;
+namespace string_format {
+	class Dictionary;
 
-namespace CSFormatString {
 	template<typename... Args>
 	static std::wstring Format(const std::wstring& formater, Args... args)
 	{
