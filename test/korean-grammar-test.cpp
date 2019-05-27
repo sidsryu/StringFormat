@@ -27,6 +27,14 @@ TEST_CASE("Decorate parameters by Korean grammar", "[korean][grammar]")
 		CHECK(result == L"전사를 전사를 도적을 도적을");
 	}
 
+	SECTION("Casting Connectors")
+	{
+		auto format = L"{0,과} {0,와} {1,과} {1,와}";
+		auto result = string_format::Format(format, L"전사", L"도적");
+
+		CHECK(result == L"전사와 전사와 도적과 도적과");
+	}
+
 	SECTION("Casting decorated parameters with particles")
 	{
 		auto format = L"당신은 {0,를:<<$>>} 먹습니다.";

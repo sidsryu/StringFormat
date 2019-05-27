@@ -126,6 +126,10 @@ namespace evaluator {
 		case L'은':
 		case L'는':
 			m_ctx.affix = EndsInConsonant(m_ctx.captured) ? L'은' : L'는';
+			break;		
+		case L'과':
+		case L'와':
+			m_ctx.affix = EndsInConsonant(m_ctx.captured) ? L'과' : L'와';
 			break;
 		default:
 			return false;
