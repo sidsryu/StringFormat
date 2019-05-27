@@ -11,6 +11,14 @@ TEST_CASE("Output replaced a string from a formated string with prarmeters", "[b
 		CHECK(result == L"test 0, 1, 2");
 	}
 
+	SECTION("Number type arguments")
+	{
+		auto format = L"test {0}, {1}";
+		auto result = CSFormatString::Format(format, 100, 3.14);
+
+		CHECK(result == L"test 100, 3.14");
+	}
+
 	SECTION("Empty string arguments")
 	{
 		auto format = L"test {0}{1}{2}";
